@@ -5,7 +5,7 @@ from typing import Optional
 class Cliente(SQLModel, table=True):
 
   # ID inicial vazio (será gerado pelo banco)
-  id: Optional[int] = Field(default=none, primary_key=True) 
+  id: Optional[int] = Field(default=None, primary_key=True) 
   nome: str
   email: str
   cpf: str
