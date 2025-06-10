@@ -1,0 +1,10 @@
+# Pasta do ambiente virtual Python
+.venv/
+
+# Arquivos temporários de cache gerados pelo Python
+__pycache__/
+*.pyo
+*.pyc
+
+# Arquivos de sistema e logs
+*.log
