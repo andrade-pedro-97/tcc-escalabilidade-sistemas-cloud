@@ -25,8 +25,16 @@ def criar_cliente(cliente: ClienteCreate, session: Session = Depends(get_session
     session.refresh(novo)
     return novo
 
-# (READ/GET) Endpoint para listagem de cliente(s)
+# (READ/GET) Endpoint para listagem de todos os cliente(s)
 @app.get("/clientes", response_model=List[ClienteRead])
 def listar_clientes(session: Session = Depends(get_session)):
   results = session.exec(select(Cliente)).all()
   return results
+
+# 
+@app.get("/cliente/{cliente_id}", response_model=ClienteRead)
+def buscar_cliente(cliente_id: int, session: Session = Depends(get_session)):
+    cliente = session.get(Cliente, cliente_id)
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+    return cliente
