@@ -25,7 +25,7 @@ def criar_cliente(cliente: ClienteCreate, session: Session = Depends(get_session
     session.refresh(novo)
     return novo
 
-# (READ/GET) Endpoint para listagem de todos os cliente(s)
+# (READ/GET) Endpoint para listagem de todos os clientes
 @app.get("/clientes", response_model=List[ClienteRead])
 def listar_clientes(session: Session = Depends(get_session)):
   results = session.exec(select(Cliente)).all()
@@ -39,7 +39,7 @@ def buscar_cliente(cliente_id: int, session: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
     return cliente
 
-# 
+# (UPDATE/PUT) Endpoint para atualização de dados
 @app.put("/clientes/{cliente_id}", response_model=ClienteRead)
 def atualizar_cliente(cliente_id: int, dados: ClienteCreate, session: Session = Depends(get_session)):
    cliente = session.get(Cliente, cliente_id)
@@ -54,3 +54,14 @@ def atualizar_cliente(cliente_id: int, dados: ClienteCreate, session: Session = 
    session.commit()
    session.refresh(cliente)
    return cliente
+
+# (DELETE) Endpoint de deleção de cliente
+@app.delete("/cliente/{cliente_id}", status_code=204)
+def deletar_cliente(cliente_id: int, session: Session = Depends(get_session)):
+   cliente = session.get(Cliente, cliente_id)
+   if not cliente:
+      raise HTTPException(status_code=404, detail="Cliente não encontrado")
+   
+   session.delete(cliente)
+   session.commit()
+   return
