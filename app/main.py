@@ -31,10 +31,26 @@ def listar_clientes(session: Session = Depends(get_session)):
   results = session.exec(select(Cliente)).all()
   return results
 
-# 
+# (READ/GET) Endpoint para consulta unitária de cliente
 @app.get("/cliente/{cliente_id}", response_model=ClienteRead)
 def buscar_cliente(cliente_id: int, session: Session = Depends(get_session)):
     cliente = session.get(Cliente, cliente_id)
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
     return cliente
+
+# 
+@app.put("/clientes/{cliente_id}", response_model=ClienteRead)
+def atualizar_cliente(cliente_id: int, dados: ClienteCreate, session: Session = Depends(get_session)):
+   cliente = session.get(Cliente, cliente_id)
+   if not cliente:
+      raise HTTPException(status_code=404, detail="Cliente não encontrado")
+   
+   cliente.nome = dados.nome
+   cliente.email = dados.email
+   cliente.cpf = dados.cpf
+
+   session.add(cliente)
+   session.commit()
+   session.refresh(cliente)
+   return cliente
